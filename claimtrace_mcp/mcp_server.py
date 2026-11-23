@@ -21,7 +21,7 @@ from .client import ClaimTraceError, check, source_spec
 
 INSTRUCTIONS = ("ClaimTrace checks every number in a document against the sources you give it. Each claim "
                 "comes back SUPPORTED, MISMATCH or UNSUPPORTED with the source span that decides it. "
-                "Accuracy: 94% (29/31) on held-out real claims; weak on wrong-table-column cases. "
+                "Accuracy: 94% (29/31) on held-out real claims for engine check-v2 (current check-v3 re-measure pending); weak on wrong-table-column cases. "
                 "Not a guarantee: treat verdicts as a reviewer's first pass.")
 
 

@@ -196,7 +196,7 @@ https://mayamate.com/claimtrace/
 
 ## Accuracy
 
-Measured accuracy: 29 of 31 (94%) on two frozen held-out sets of real government-statistics claims
+Measured accuracy (previous engine, check-v2; the current check-v3 is being re-measured): 29 of 31 (94%) on two frozen held-out sets of real government-statistics claims
 (20/21 and 9/10), re-measured 2026-11-23 after fixing a data bug of ours that had damaged two
 evidence rows (the earlier figure was 27 of 31). Known weak spot: picking the wrong table column
 (caught 2 of 4). Small sample. Not a guarantee: use the verdicts as a reviewer's first pass.
