@@ -1,0 +1,58 @@
+name: ClaimTrace number check
+description: Check every number in the docs a pull request changes against their sources, and comment the result.
+author: Maya (mayamate.com)
+branding:
+  icon: check-circle
+  color: orange
+
+inputs:
+  files:
+    description: Glob(s) of documents to check, newline- or comma-separated.
+    required: false
+    default: "**/*.md"
+  sources:
+    description: >
+      Newline-separated source URLs or repository paths (text or .pdf), at most 3. If empty,
+      each document is checked against the URLs it links (first 3).
+    required: false
+    default: ""
+  api-key:
+    description: ClaimTrace API key. Without one, the free allowance (10 claims/day) applies.
+    required: false
+    default: ""
+  fail-on:
+    description: "Fail the job on: mismatch | unsupported (mismatch or unsupported) | none."
+    required: false
+    default: "none"
+  share:
+    description: Save public reports (deleted after 30 days) so the PR comment can link them.
+    required: false
+    default: "true"
+  github-token:
+    description: Token used to post the PR comment (needs pull-requests write).
+    required: false
+    default: ${{ github.token }}
+  python-version:
+    description: Python used to run the checker.
+    required: false
+    default: "3.12"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install claimtrace-mcp (from this action's checkout)
+      shell: bash
+      run: python -m pip install --quiet --disable-pip-version-check "$GITHUB_ACTION_PATH"
+    - name: Check numbers
+      shell: bash
+      env:
+        CT_FILES: ${{ inputs.files }}
+        CT_SOURCES: ${{ inputs.sources }}
+        CT_FAIL_ON: ${{ inputs.fail-on }}
+        CT_SHARE: ${{ inputs.share }}
+        CLAIMTRACE_API_KEY: ${{ inputs.api-key }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: python -m claimtrace_mcp.action_runner

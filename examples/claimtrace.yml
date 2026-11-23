@@ -1,0 +1,21 @@
+name: numbers
+on: pull_request
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  claimtrace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # lets the action diff against the base branch
+      - uses: mayamate26/claimtrace@v0
+        with:
+          files: "docs/**/*.md"
+          # sources: |            # optional. By default each doc is checked against the URLs it links
+          #   https://example.gov/release
+          #   data/table.csv
+          api-key: ${{ secrets.CLAIMTRACE_API_KEY }}   # optional
+          fail-on: mismatch       # default: none
+          share: true             # default: true, so the comment can link the reports
