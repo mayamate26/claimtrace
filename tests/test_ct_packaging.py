@@ -33,14 +33,18 @@ def test_import_package_is_renamed():
     assert not (ROOT / "claimtrace").exists()
 
 
-def test_server_json_points_at_claimtrace_mcp_with_no_runtime_arguments():
+def test_server_json_lists_the_remote_and_no_unpublished_package():
     data = json.loads((ROOT / "server.json").read_text(encoding="utf-8"))
     assert data["name"] == "com.mayamate/claimtrace"
-    (pkg,) = data["packages"]
-    assert pkg["registryType"] == "pypi" and pkg["identifier"] == "claimtrace-mcp"
-    assert pkg["runtimeHint"] == "uvx" and pkg["transport"] == {"type": "stdio"}
-    assert "runtimeArguments" not in pkg and "packageArguments" not in pkg
-    assert pkg["version"] == data["version"] == _project()["version"]
+    assert "packages" not in data  # PyPI not published yet; the registry validates packages
+    assert data["remotes"] == [{"type": "streamable-http", "url": "https://claimtrace-api.fly.dev/mcp"}]
+    assert data["version"] == _project()["version"]
+
+
+def test_readme_remote_section_comes_before_stdio():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "https://claimtrace-api.fly.dev/mcp" in readme
+    assert readme.index("## Remote MCP (no install)") < readme.index("## MCP server (local, stdio)")
 
 
 def test_readme_install_and_mcp_commands():

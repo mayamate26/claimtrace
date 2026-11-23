@@ -9,25 +9,10 @@
     "source": "github"
   },
   "version": "0.1.0",
-  "packages": [
+  "remotes": [
     {
-      "registryType": "pypi",
-      "registryBaseUrl": "https://pypi.org",
-      "identifier": "claimtrace-mcp",
-      "version": "0.1.0",
-      "runtimeHint": "uvx",
-      "transport": {
-        "type": "stdio"
-      },
-      "environmentVariables": [
-        {
-          "name": "CLAIMTRACE_API_KEY",
-          "description": "Optional ClaimTrace API key. Without one, the free allowance of 10 claims/day applies.",
-          "isRequired": false,
-          "isSecret": true,
-          "format": "string"
-        }
-      ]
+      "type": "streamable-http",
+      "url": "https://claimtrace-api.fly.dev/mcp"
     }
   ]
 }

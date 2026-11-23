@@ -78,7 +78,39 @@ Errors raise `claimtrace_mcp.AuthError` (401), `RateLimitError` (429), `Unavaila
 `APIError`. Each carries the server's message and `.status`. `get_report(id)` and
 `get_badge(id)` fetch a shared report's JSON and SVG badge.
 
-## MCP server
+## Remote MCP (no install)
+
+ClaimTrace also runs as a hosted MCP server (Streamable HTTP, stateless, JSON responses). Nothing to
+install: point any MCP client that supports remote servers at
+
+```
+https://claimtrace-api.fly.dev/mcp
+```
+
+It exposes the same `check_numbers` tool as the local server below, with the same free allowance.
+No key is needed for the free allowance. If you have an API key, add the header
+`Authorization: Bearer <key>` (or `X-API-Key: <key>`) in your client's config.
+
+**Claude Code**:
+
+```sh
+claude mcp add --transport http claimtrace https://claimtrace-api.fly.dev/mcp
+```
+
+**Claude Desktop** (Settings → Connectors → Add custom connector) takes the URL above. Clients
+configured by JSON, such as Cursor (`~/.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "claimtrace": {
+      "url": "https://claimtrace-api.fly.dev/mcp"
+    }
+  }
+}
+```
+
+## MCP server (local, stdio)
 
 The server exposes one tool, `check_numbers(document, sources, share=false)`. Each source is a URL
 (it starts with `http://` or `https://`) or pasted text. The tool returns a one-line summary and the
