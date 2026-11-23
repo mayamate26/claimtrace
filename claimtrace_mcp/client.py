@@ -22,7 +22,7 @@ from typing import Any, Iterable, Union
 import httpx
 
 DEFAULT_API_BASE = "https://claimtrace-api.fly.dev"
-USER_AGENT = "claimtrace-python/0.1.0"
+USER_AGENT = "claimtrace-python/0.1.2"
 
 Source = Union[str, dict]
 Pdf = Union[str, os.PathLike, tuple]

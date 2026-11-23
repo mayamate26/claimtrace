@@ -8,11 +8,20 @@
     "url": "https://github.com/mayamate26/claimtrace",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.2",
   "remotes": [
     {
       "type": "streamable-http",
       "url": "https://claimtrace-api.fly.dev/mcp"
+    }
+  ],
+  "icons": [
+    {
+      "src": "https://mayamate.com/avatar-256.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "256x256"
+      ]
     }
   ]
 }

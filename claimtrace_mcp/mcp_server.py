@@ -8,7 +8,13 @@ dependency of the ``claimtrace-mcp`` distribution, but it is imported lazily: th
 from __future__ import annotations
 
 import sys
-from typing import Any
+from typing import Annotated, Any
+
+try:  # pydantic ships with mcp; the tool logic itself does not need it
+    from pydantic import Field
+except ImportError:  # pragma: no cover
+    def Field(**_kw):  # noqa: N802
+        return None
 
 from . import render
 from .client import ClaimTraceError, check, source_spec
@@ -17,6 +23,14 @@ INSTRUCTIONS = ("ClaimTrace checks every number in a document against the source
                 "comes back SUPPORTED, MISMATCH or UNSUPPORTED with the source span that decides it. "
                 "Accuracy: 94% (29/31) on held-out real claims; weak on wrong-table-column cases. "
                 "Not a guarantee: treat verdicts as a reviewer's first pass.")
+
+
+DOC_DESC = ("The text whose numbers you want checked (an AI-written draft, memo, investor update, "
+            "article). Plain text or markdown. Every numeric claim in it is extracted and checked.")
+SOURCES_DESC = ("1 to 3 sources the numbers should come from. Each item is either a public http(s) URL "
+                "(HTML or PDF, fetched by the server) or the source text pasted directly.")
+SHARE_DESC = ("If true, also publish the claim ledger as a public report page and return its link "
+              "(kept 30 days). Default false: nothing is stored.")
 
 
 class MissingMCP(RuntimeError):
@@ -60,8 +74,21 @@ def _server_class():
 def build_server():
     server = _server_class()("claimtrace", instructions=INSTRUCTIONS)
 
-    @server.tool(name="check_numbers")
-    def _check_numbers(document: str, sources: list[str], share: bool = False) -> dict[str, Any]:
+    try:
+        from mcp.types import ToolAnnotations
+    except ImportError:  # pragma: no cover - very old mcp
+        ToolAnnotations = None
+    # Honest hints: share=true publishes a report page (not read-only); URLs are fetched (open world).
+    hints = dict(title="Check numbers against sources", readOnlyHint=False, destructiveHint=False,
+                 idempotentHint=False, openWorldHint=True)
+    kw = {"annotations": ToolAnnotations(**hints)} if ToolAnnotations else {}
+
+    @server.tool(name="check_numbers", **kw)
+    def _check_numbers(
+        document: Annotated[str, Field(description=DOC_DESC)],
+        sources: Annotated[list[str], Field(description=SOURCES_DESC, min_length=1, max_length=3)],
+        share: Annotated[bool, Field(description=SHARE_DESC)] = False,
+    ) -> dict[str, Any]:
         """Check every number in an AI-written document against its sources. Each source is a URL
         (http:// or https://) or pasted source text; at most 3. Returns a one-line summary and the
         claim ledger: each numeric claim labelled SUPPORTED, MISMATCH or UNSUPPORTED with the
