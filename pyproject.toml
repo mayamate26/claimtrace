@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "claimtrace-mcp"
-version = "0.1.2"
+version = "0.1.4"
 description = "Check every number in an AI-written document against its source."
 readme = "README.md"
 license = "MIT"

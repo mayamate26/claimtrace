@@ -19,7 +19,7 @@ from .client import (
     source_spec,
 )
 
-__version__ = "0.1.2"
+__version__ = "0.1.4"
 
 __all__ = [
     "DEFAULT_API_BASE", "APIError", "AuthError", "ClaimTraceError", "RateLimitError", "UnavailableError",
