@@ -42,7 +42,9 @@ def check_numbers(document: str, sources: list[str], share: bool = False, check_
     """Check every number in ``document`` against ``sources``.
 
     Each source is a URL (if it starts with http:// or https://) or pasted source text; at most 3.
-    Returns ``{"summary": "<one line>", "ledger": {claims, summary, notices, ...}}``; each claim
+    Returns ``{"summary": "<one line>", "ledger": {claims, summary, notices, ...}}``, plus
+    ``coverage_note`` and ``not_checked`` (sentences) when the server found comparison or streak
+    claims it does not check; each claim
     has ``label`` (SUPPORTED / MISMATCH / UNSUPPORTED / ERROR), ``sentence``, ``number``, ``span``
     and ``note``. With ``share`` the result includes a public report link (kept 30 days).
     """
@@ -53,7 +55,12 @@ def check_numbers(document: str, sources: list[str], share: bool = False, check_
         result = check_fn(document, specs, share=share)
     except ClaimTraceError as exc:
         raise RuntimeError(f"ClaimTrace API error: {exc}") from exc
-    return {"summary": render.summary_line(result), "ledger": result}
+    out = {"summary": render.summary_line(result), "ledger": result}
+    unchecked = render.not_checked(result)
+    if unchecked:  # older servers send no "not_checked"; then these keys are absent
+        out["coverage_note"] = render.coverage_note(result)
+        out["not_checked"] = unchecked
+    return out
 
 
 def _server_class():

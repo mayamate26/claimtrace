@@ -33,6 +33,22 @@ def _short(text, width: int) -> str:
     return t if len(t) <= width else t[: width - 1] + "…"
 
 
+def not_checked(result: dict) -> list[str]:
+    """Sentences the server reported as not checked (comparisons over a series); [] from older servers."""
+    items = result.get("not_checked") or []
+    if not isinstance(items, list):
+        return []
+    return [" ".join(str(u.get("sentence", "")).split()) for u in items if isinstance(u, dict) and u.get("sentence")]
+
+
+def coverage_note(result: dict) -> str:
+    """The server's coverage note, or a generic one if it sent sentences without a note; "" when none."""
+    if not not_checked(result):
+        return ""
+    return " ".join(str(result.get("coverage_note") or "").split()) or (
+        "Comparison/streak claims found, not checked. Check these by hand.")
+
+
 def table(result: dict, sentence_width: int = 60, span_width: int = 50) -> str:
     claims = result.get("claims") or []
     rows = [("#", "LABEL", "CLAIM", "SOURCE SPAN")]
@@ -45,6 +61,10 @@ def table(result: dict, sentence_width: int = 60, span_width: int = 50) -> str:
         lines.append("(no numeric claims checked)")
     lines += ["", summary_line(result)]
     lines += [f"note: {n}" for n in result.get("notices") or []]
+    unchecked = not_checked(result)
+    if unchecked:
+        lines += ["", f"NOT CHECKED: {coverage_note(result)}"]
+        lines += [f"  - {s}" for s in unchecked]
     return "\n".join(lines)
 
 
@@ -60,6 +80,10 @@ def markdown(result: dict) -> str:
                    f"{_md_cell(c.get('number'))} | {'“' + span + '”' if span else '—'} |")
     for n in result.get("notices") or []:
         out.append(f"\n_{_md_cell(n)}_")
+    unchecked = not_checked(result)
+    if unchecked:
+        out.append(f"\n**Not checked.** {_md_cell(coverage_note(result))}")
+        out += [f"- {_md_cell(s)}" for s in unchecked]
     return "\n".join(out)
 
 

@@ -196,6 +196,11 @@ def build_body(results: list[FileResult], skipped: int = 0) -> str:
             mism = s.get("mismatch", 0)
             lines.append(f"| `{_cell(fr.path)}` | {s.get('supported', 0)}/{s.get('total', 0)} supported | "
                          f"{'**' + str(mism) + '**' if mism else 0} | {s.get('unsupported', 0)} | {link} |")
+    for fr in results:
+        unchecked = render.not_checked(fr.result) if fr.result else []
+        if unchecked:
+            lines += ["", f"**Not checked in `{_cell(fr.path)}`:** {_cell(render.coverage_note(fr.result))}"]
+            lines += [f"- {_cell(s)}" for s in unchecked]
     if skipped:
         lines += ["", f"_{skipped} more matching file(s) not checked (limit {MAX_FILES} per run)._"]
     lines += ["", "<sub>Checked by [ClaimTrace](https://mayamate.com/claimtrace/). Verdicts are a first pass: "
