@@ -204,7 +204,7 @@ def build_body(results: list[FileResult], skipped: int = 0) -> str:
     if skipped:
         lines += ["", f"_{skipped} more matching file(s) not checked (limit {MAX_FILES} per run)._"]
     lines += ["", "<sub>Checked by [ClaimTrace](https://mayamate.com/claimtrace/). Verdicts are a first pass: "
-              "end to end on 31 held-out real government-statistics claims (engine check-v3, 2026-11-24): 16 of 18 correct numbers marked supported, no false mismatches; of 13 wrong numbers, 5 marked mismatch, 5 unsupported, 4 missed. Supported is a first pass, not proof.</sub>"]
+              "end to end on 31 held-out real government-statistics claims (engine check-v3, 2026-11-24): 16 of 18 correct numbers marked supported, no false mismatches; of 13 wrong numbers, 5 marked mismatch, 5 unsupported, 3 missed. Supported is a first pass, not proof.</sub>"]
     return "\n".join(lines) + "\n"
 
 

@@ -23,7 +23,7 @@ INSTRUCTIONS = ("ClaimTrace checks every number in a document against the source
                 "comes back SUPPORTED, MISMATCH or UNSUPPORTED with the source span that decides it. "
                 "Measured accuracy, end to end on 31 held-out real government-statistics claims (engine check-v3, 2026-11-24): "
                 "16 of 18 correct numbers marked supported, no false mismatches; of 13 wrong numbers, 5 marked mismatch, "
-                "5 unsupported, 4 missed. Not a guarantee: treat SUPPORTED as a reviewer's first pass, not proof.")
+                "5 unsupported, 3 missed. Not a guarantee: treat SUPPORTED as a reviewer's first pass, not proof.")
 
 
 DOC_DESC = ("The text whose numbers you want checked (an AI-written draft, memo, investor update, "

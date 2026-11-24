@@ -200,7 +200,7 @@ https://mayamate.com/claimtrace/
 
 ## Accuracy
 
-Measured end to end on the live engine (check-v3), 2026-11-24, on 31 frozen held-out real government-statistics claims: 16 of 18 correct numbers marked supported and no correct number called a mismatch. Of 13 wrong numbers, 5 were marked mismatch, 5 unsupported (flagged for a human look) and 4 missed: passed as supported (a wrong table column, a wrong date, a claimed new low that was really a tie) or not extracted (a streak claim with no number in it). Our earlier 94% figure measured only the checking step with the exact evidence handed to it; the whole pipeline is weaker, and this is the number that counts. Small sample. Not a guarantee. Use the verdicts as a reviewer's first pass.
+Measured end to end on the live engine (check-v3), 2026-11-24, on 31 frozen held-out real government-statistics claims: 16 of 18 correct numbers marked supported and no correct number called a mismatch. Of 13 wrong numbers, 5 were marked mismatch, 5 unsupported (flagged for a human look) and 3 missed: passed as supported (a wrong table column, a wrong date, a claimed new low that was really a tie) or not extracted (a streak claim with no number in it). Our earlier 94% figure measured only the checking step with the exact evidence handed to it; the whole pipeline is weaker, and this is the number that counts. Small sample. Not a guarantee. Use the verdicts as a reviewer's first pass.
 
 ## Privacy
 
