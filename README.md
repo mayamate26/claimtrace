@@ -2,6 +2,10 @@
 
 Check every number in an AI-written document against its source.
 
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/mayamate26/claimtrace)
+
+Also listed in the [official MCP registry](https://registry.modelcontextprotocol.io/v0/servers?search=com.mayamate/claimtrace) (`com.mayamate/claimtrace`), on [Glama](https://glama.ai/mcp/servers/mayamate26/claimtrace) and on [mcptry](https://mcptry.com/servers/com.mayamate/claimtrace).
+
 <!-- mcp-name: com.mayamate/claimtrace -->
 
 You give ClaimTrace a document and up to three sources (URLs, text files or PDFs). It finds every
