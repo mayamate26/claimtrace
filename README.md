@@ -193,6 +193,38 @@ jobs:
 When the Action can't diff, it checks all matching files, still capped at 5. On pull requests from
 forks the token is read-only, so the comment is skipped and only the job summary is written.
 
+## FAQ
+
+**How do I fact-check the statistics in a report ChatGPT (or any LLM) wrote for me?**
+Paste the draft and the sources it should rest on (the release, filing or dataset URL, or a PDF)
+into the free web checker at https://mayamate.com/claimtrace/?utm_source=github, or run
+`claimtrace check draft.md --source <url>`. Every number comes back as supported (with the source
+sentence quoted), mismatch (the source says something else) or unsupported (no source covers it).
+Read the mismatches and unsupported rows first; that is where the fixing is.
+
+**How can my AI agent verify numbers before it sends a document?**
+Give it the remote MCP server: `claude mcp add --transport http claimtrace https://check.mayamate.com/mcp`
+(or any MCP client, see below). The agent calls `check_numbers` with its draft and sources and gets
+the claim ledger back before it hits send. No install, no key for the free tier.
+
+**How do analysts check that every number in a memo matches the filings?**
+Pass the filing or release URLs (or PDFs) as sources. ClaimTrace retrieves the passage behind each
+number and quotes it. Figures you derived yourself (a change, a sum) usually come back unsupported
+rather than recomputed. Wrong table columns are its weakest spot today (see
+Accuracy), so treat a green row from a dense table as "probably right", not "verified".
+
+**Does it check citations, or only numbers?**
+Only numbers: counts, percentages, money, dates with values. It does not judge opinions, wording or
+whether a source is trustworthy. Sentences it cannot check (comparisons like "highest since 2021",
+streaks with no number) are listed under "Not checked" so they don't look verified.
+
+**How is this different from a general fact-checker?**
+It checks against *your* sources, not the open web, and quotes the exact span it used. A claim no
+source covers is marked unsupported, never guessed. The test set is public:
+[ClaimBench](https://mayamate.com/guides/claimbench/).
+
+**Is it accurate?** Not fully, and we publish how often it is wrong. See below.
+
 ## Pricing
 
 Without an API key you get 10 claims a day free. API credits start at $10, at $0.02 per claim:
@@ -200,7 +232,7 @@ https://mayamate.com/claimtrace/
 
 ## Accuracy
 
-Measured end to end on the live engine (check-v3), 2026-11-24, on 31 frozen held-out real government-statistics claims: 16 of 18 correct numbers marked supported and no correct number called a mismatch. Of 13 wrong numbers, 5 were marked mismatch, 5 unsupported (flagged for a human look) and 3 missed: passed as supported (a wrong table column, a wrong date, a claimed new low that was really a tie) or not extracted (a streak claim with no number in it). Our earlier 94% figure measured only the checking step with the exact evidence handed to it; the whole pipeline is weaker, and this is the number that counts. Small sample. Not a guarantee. Use the verdicts as a reviewer's first pass.
+Measured end to end on the live engine (check-v3), 2026-11-24, on 31 frozen held-out real government-statistics claims: 16 of 18 correct numbers marked supported and no correct number called a mismatch. Of 13 wrong numbers, 5 were marked mismatch, 5 unsupported (flagged for a human look) and 3 missed: passed as supported (a wrong table column, a wrong date, a claimed new low that was really a tie). One of the 5 unsupported is a streak claim with no number in it that was never extracted. Our earlier 94% figure measured only the checking step with the exact evidence handed to it; the whole pipeline is weaker, and this is the number that counts. Small sample. Not a guarantee. Use the verdicts as a reviewer's first pass.
 
 ## Privacy
 
